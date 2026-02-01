@@ -1,0 +1,367 @@
+/* ==================== */
+/*    COLOR PALETTE     */
+/* ==================== */
+
+:root {
+
+/* Grey */
+--color-grey-900: #314855;
+--color-grey-500: #6E8098;
+--color-grey-400: #9DAEC2;
+--color-grey-200: #ECF2F8;
+
+/* White */
+--color-white: #FFFFFF;
+
+/* ## Typography */
+  --fw-bold: 700;
+  --fw-medium: 500;
+
+}
+
+/* ==================== */
+/*    BASE STYLES    */
+/* ==================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%; /* 1rem = 10px */
+}
+
+body {
+  font-family: 'Manrope', Arial, Helvetica, sans-serif;
+  font-size: 1.3rem;
+  font-weight: var(--fw-medium);
+  color: var(--color-grey-900);
+  background-color: var(--color-grey-200);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.article-preview-component {
+  background-color: var(--color-white);
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  max-width: 730px;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.image-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem 1rem 0 0; /* Rounded corners on top for mobile */
+  flex: 0 0 100%; /* Full width on mobile */
+  min-height: 200px;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.text-container {
+  padding: 3.2rem 3.2rem 2rem 3.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+h1 {
+  font-size: 1.6rem;
+  color: var(--color-grey-900);
+  font-weight: var(--fw-bold);
+  line-height: 1.5;
+}
+
+.description {
+  font-size: 1.3rem;
+  color: var(--color-grey-500);
+  line-height: 1.6;
+}
+
+/* ==================== */
+/*    FOOTER STYLES     */
+/* ==================== */
+
+.footer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 0 3.2rem 2rem 3.2rem;
+  align-items: center;
+  gap: 1rem;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.author-name {
+  font-weight: var(--fw-bold);
+  color: var(--color-grey-900);
+  font-size: 1.3rem;
+}
+
+.footer time {
+  color: var(--color-grey-400);
+  font-size: 1.3rem;
+}
+
+/* ==================== */
+/*   SHARE FUNCTIONALITY */
+/* ==================== */
+
+.share-wrapper {
+  justify-self: end;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.share-label {
+  font-size: 1.3rem;
+  letter-spacing: 0.5rem;
+  color: var(--color-grey-400);
+  font-weight: var(--fw-medium);
+}
+
+.share-button {
+  border: none;
+  background-color: var(--color-grey-200);
+  padding: 0.9rem;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.share-button:hover {
+  background-color: var(--color-grey-400);
+}
+
+.share-button:focus-visible {
+  outline: 2px solid var(--color-grey-900);
+  outline-offset: 2px;
+}
+
+.share-button svg {
+  fill: var(--color-grey-500);
+  transition: fill 0.3s ease;
+}
+
+.share-button:hover svg {
+  fill: var(--color-white);
+}
+
+/* Social Links - Hidden by default on desktop/tablet */
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  background-color: var(--color-grey-900);
+  padding: 1.8rem 3.6rem;
+  border-radius: 1rem;
+  position: absolute;
+  bottom: calc(100% + 2rem);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+/* Tooltip arrow - points down to the center of share button */
+.social-links::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid var(--color-grey-900);
+}
+
+.social-links.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.social-links a:hover {
+  transform: translateY(-2px);
+}
+
+.social-links a:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.social-links svg {
+  color: var(--color-white);
+  transition: color 0.2s ease;
+}
+
+.social-links a:hover svg,
+.social-links a:focus-visible svg {
+  color: var(--color-grey-200);
+}
+
+/* ==================== */
+/* MOBILE ACTIVE STATE  */
+/* ==================== */
+
+@media (max-width: 607px) {
+  /* When share is active on mobile, transform entire footer */
+  .footer.is-share-active {
+    background-color: var(--color-grey-900);
+    grid-template-columns: 1fr;
+    padding: 2.2rem 3.2rem;
+    border-radius: 0 0 1rem 1rem;
+  }
+
+  .footer.is-share-active .author-info {
+    display: none;
+  }
+
+  .footer.is-share-active .share-wrapper {
+    width: 100%;
+    justify-self: stretch;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer.is-share-active .social-links {
+    position: static;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    gap: 1.6rem;
+  }
+
+  .footer.is-share-active .social-links::after {
+    display: none;
+  }
+
+  .footer.is-share-active .share-label {
+    color: var(--color-grey-400);
+  }
+
+  .footer.is-share-active .share-button {
+    background-color: var(--color-grey-500);
+  }
+
+  .footer.is-share-active .share-button svg {
+    fill: var(--color-white);
+  }
+}
+
+/* ==================== */
+/*  TABLET STYLES       */
+/* ==================== */
+
+@media (min-width: 608px) {
+  body {
+    padding: 3rem;
+  }
+
+  .article-preview-component {
+    flex-direction: row;
+    max-width: 730px;
+  }
+
+  .image-container {
+    border-radius: 1rem 0 0 1rem;
+    flex: 0 0 40%;
+    min-height: auto;
+  }
+
+  .text-container {
+    padding: 3.2rem 4rem 2rem 4rem;
+  }
+
+  .footer {
+    padding: 0 4rem 3.2rem 4rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 1.4;
+  }
+
+  .description {
+    font-size: 1.3rem;
+  }
+}
+
+/* ==================== */
+/*  DESKTOP STYLES      */
+/* ==================== */
+
+@media (min-width: 768px) {
+  .article-preview-component {
+    max-width: 730px;
+  }
+
+  h1 {
+    font-size: 2.05rem;
+  }
+}
+
+/* ==================== */
+/*  LARGE DESKTOP       */
+/* ==================== */
+
+@media (min-width: 1024px) {
+  .article-preview-component {
+    max-width: 730px;
+  }
+}
