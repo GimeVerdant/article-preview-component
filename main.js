@@ -7,6 +7,20 @@ const socialLinks = document.querySelector('.social-links');
 const footer = document.querySelector('.footer');
 
 
+// When the nav should be hidden
+const navElement = document.getElementById('social-links');
+navElement.setAttribute('aria-hidden', 'true');
+navElement.querySelectorAll('a, button, input, select, [tabindex="0"]').forEach(element => {
+  element.setAttribute('tabindex', '-1');
+});
+
+// When the nav should be shown
+// navElement.removeAttribute('aria-hidden');
+// navElement.querySelectorAll('[tabindex="-1"]').forEach(element => {
+//   element.removeAttribute('tabindex'); // Or set to '0' if it should be focusable
+// });
+
+
 // Configuration for sharing
 const SHARE_CONFIG = {
   url: window.location.href, // Current page URL
