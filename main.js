@@ -1,25 +1,9 @@
 // Article Preview Component - Share Functionality
 // Handles both mobile (footer transformation) and desktop/tablet (tooltip) behaviors
-// Includes real social media sharing
 
 const shareButton = document.querySelector('.share-button');
 const socialLinks = document.querySelector('.social-links');
 const footer = document.querySelector('.footer');
-
-
-// When the nav should be hidden
-const navElement = document.getElementById('social-links');
-navElement.setAttribute('aria-hidden', 'true');
-navElement.querySelectorAll('a, button, input, select, [tabindex="0"]').forEach(element => {
-  element.setAttribute('tabindex', '-1');
-});
-
-// When the nav should be shown
-// navElement.removeAttribute('aria-hidden');
-// navElement.querySelectorAll('[tabindex="-1"]').forEach(element => {
-//   element.removeAttribute('tabindex'); // Or set to '0' if it should be focusable
-// });
-
 
 // Configuration for sharing
 const SHARE_CONFIG = {
@@ -98,7 +82,8 @@ function handleSocialClick(e, platform) {
   // Close the share menu after sharing
   closeShareMenu();
   
-
+  // Optional: Track analytics
+  // trackShareEvent(platform);
 }
 
 /**
@@ -108,16 +93,36 @@ function toggleShareMenu() {
   const isActive = shareButton.getAttribute('aria-expanded') === 'true';
   const isMobile = window.innerWidth < 608;
   
-  // Toggle aria attributes
-  shareButton.setAttribute('aria-expanded', !isActive);
-  socialLinks.setAttribute('aria-hidden', isActive);
-  
-  if (isMobile) {
-    // Mobile: Transform entire footer
-    footer.classList.toggle('is-share-active');
+  if (!isActive) {
+    // Opening the menu
+    shareButton.setAttribute('aria-expanded', 'true');
+    socialLinks.removeAttribute('aria-hidden');
+    
+    // Make social links focusable
+    const socialLinkElements = socialLinks.querySelectorAll('a');
+    socialLinkElements.forEach(link => {
+      link.removeAttribute('tabindex');
+    });
+    
+    if (isMobile) {
+      // Mobile: Transform entire footer
+      footer.classList.add('is-share-active');
+    } else {
+      // Desktop/Tablet: Show tooltip above button
+      socialLinks.classList.add('show');
+    }
+    
+    // Move focus to first social link after menu opens
+    setTimeout(() => {
+      const firstLink = socialLinks.querySelector('a');
+      if (firstLink) {
+        firstLink.focus();
+      }
+    }, 100);
+    
   } else {
-    // Desktop/Tablet: Show tooltip above button
-    socialLinks.classList.toggle('show');
+    // Closing the menu
+    closeShareMenu();
   }
 }
 
@@ -131,14 +136,25 @@ function closeShareMenu() {
   
   const isMobile = window.innerWidth < 608;
   
+  // Update ARIA attributes
   shareButton.setAttribute('aria-expanded', 'false');
   socialLinks.setAttribute('aria-hidden', 'true');
   
+  // Make social links not focusable
+  const socialLinkElements = socialLinks.querySelectorAll('a');
+  socialLinkElements.forEach(link => {
+    link.setAttribute('tabindex', '-1');
+  });
+  
+  // Remove visual classes
   if (isMobile) {
     footer.classList.remove('is-share-active');
   } else {
     socialLinks.classList.remove('show');
   }
+  
+  // Return focus to share button
+  shareButton.focus();
 }
 
 /**
@@ -149,13 +165,27 @@ function resetStates() {
   socialLinks.classList.remove('show');
   shareButton.setAttribute('aria-expanded', 'false');
   socialLinks.setAttribute('aria-hidden', 'true');
+  
+  // Reset tabindex on social links
+  const socialLinkElements = socialLinks.querySelectorAll('a');
+  socialLinkElements.forEach(link => {
+    link.setAttribute('tabindex', '-1');
+  });
 }
 
-// Event Listeners
-
-// Set up social media link click handlers
+// Event Listeners - All wrapped in DOMContentLoaded to ensure DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Get all social links
+  // Initialize ARIA attributes
+  shareButton.setAttribute('aria-expanded', 'false');
+  socialLinks.setAttribute('aria-hidden', 'true');
+  
+  // Make social links not focusable by default (hidden state)
+  const socialLinkElements = socialLinks.querySelectorAll('a');
+  socialLinkElements.forEach(link => {
+    link.setAttribute('tabindex', '-1');
+  });
+  
+  // Get all social links and add click handlers
   const facebookLink = document.querySelector('a[aria-label*="Facebook"]');
   const twitterLink = document.querySelector('a[aria-label*="Twitter"]');
   const pinterestLink = document.querySelector('a[aria-label*="Pinterest"]');
@@ -172,75 +202,66 @@ document.addEventListener('DOMContentLoaded', () => {
     pinterestLink.addEventListener('click', (e) => handleSocialClick(e, 'pinterest'));
   }
   
-  // Initialize ARIA attributes
-  shareButton.setAttribute('aria-expanded', 'false');
-  socialLinks.setAttribute('aria-hidden', 'true');
-});
-
-// Share button click
-shareButton.addEventListener('click', (e) => {
-  e.stopPropagation();
-  toggleShareMenu();
-});
-
-// Close on click outside
-document.addEventListener('click', (e) => {
-  const isClickInside = shareButton.contains(e.target) || socialLinks.contains(e.target);
+  // Share button click
+  shareButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleShareMenu();
+  });
   
-  if (!isClickInside) {
-    closeShareMenu();
-  }
-});
-
-// Close on Escape key
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeShareMenu();
-  }
-});
-
-// Handle window resize
-let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    // Reset all states when viewport changes to prevent layout issues
-    resetStates();
-  }, 250);
-});
-
-// Prevent social links clicks from closing the menu immediately
-socialLinks.addEventListener('click', (e) => {
-  e.stopPropagation();
-});
-
-// Enhanced keyboard navigation within social links
-socialLinks.addEventListener('keydown', (e) => {
-  const links = socialLinks.querySelectorAll('a');
-  const currentIndex = Array.from(links).indexOf(document.activeElement);
+  // Close on click outside
+  document.addEventListener('click', (e) => {
+    const isClickInside = shareButton.contains(e.target) || socialLinks.contains(e.target);
+    
+    if (!isClickInside) {
+      closeShareMenu();
+    }
+  });
   
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-    e.preventDefault();
-    const nextIndex = (currentIndex + 1) % links.length;
-    links[nextIndex].focus();
-  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-    e.preventDefault();
-    const prevIndex = (currentIndex - 1 + links.length) % links.length;
-    links[prevIndex].focus();
-  }
-});
-
-// Focus management: when menu opens, focus first link (for accessibility)
-shareButton.addEventListener('click', () => {
-  const isActive = shareButton.getAttribute('aria-expanded') === 'true';
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeShareMenu();
+    }
+  });
   
-  if (isActive) {
-    // Menu just opened, focus first social link after a brief delay
-    setTimeout(() => {
-      const firstLink = socialLinks.querySelector('a');
-      if (firstLink) {
-        firstLink.focus();
-      }
-    }, 100);
-  }
+  // Handle window resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      // Reset all states when viewport changes to prevent layout issues
+      resetStates();
+    }, 250);
+  });
+  
+  // Prevent social links clicks from closing the menu immediately
+  socialLinks.addEventListener('click', (e) => {
+    // Allow the link navigation but don't close menu
+    // (Links will navigate away anyway)
+    e.stopPropagation();
+  });
+  
+  // Enhanced keyboard navigation within social links
+  socialLinks.addEventListener('keydown', (e) => {
+    const links = socialLinks.querySelectorAll('a');
+    const currentIndex = Array.from(links).indexOf(document.activeElement);
+    
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = (currentIndex + 1) % links.length;
+      links[nextIndex].focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = (currentIndex - 1 + links.length) % links.length;
+      links[prevIndex].focus();
+    } else if (e.key === 'Tab' && e.shiftKey && currentIndex === 0) {
+      // Shift+Tab on first link - close menu and return to button
+      e.preventDefault();
+      closeShareMenu();
+    } else if (e.key === 'Tab' && !e.shiftKey && currentIndex === links.length - 1) {
+      // Tab on last link - close menu and return to button
+      e.preventDefault();
+      closeShareMenu();
+    }
+  });
 });
