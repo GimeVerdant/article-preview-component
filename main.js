@@ -1,6 +1,7 @@
 // Article Preview Component - Share Functionality
 // Handles both mobile (footer transformation) and desktop/tablet (tooltip) behaviors
 
+
 const shareButton = document.querySelector('.share-button');
 const socialLinks = document.querySelector('.social-links');
 const footer = document.querySelector('.footer');

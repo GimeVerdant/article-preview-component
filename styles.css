@@ -50,7 +50,7 @@ body {
   background-color: var(--color-white);
   border-radius: 1rem;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  max-width: 730px;
+  max-width: 45.625rem;
   display: flex;
   flex-direction: column;
 
@@ -241,21 +241,20 @@ h1 {
   border-radius: 2px;
 }
 
-.social-links svg {
-  color: var(--color-white);
-  transition: color 0.2s ease;
-}
-
 .social-links a:hover svg,
 .social-links a:focus-visible svg {
   color: var(--color-grey-200);
 }
 
+.social-links svg {
+  color: var(--color-white);
+  transition: color 0.2s ease;
+}
 /* ==================== */
 /* MOBILE ACTIVE STATE  */
 /* ==================== */
 
-@media (max-width: 607px) {
+@media (max-width: 37.9375em) { /* 607px / 16 = 37.9375em */
   /* When share is active on mobile, transform entire footer */
   .footer.is-share-active {
     background-color: var(--color-grey-900);
